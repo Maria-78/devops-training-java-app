@@ -10,6 +10,7 @@ pipeline {
   // `agent any` = el pipeline se ejecuta en cualquier nodo/agente disponible.
   agent any
 
+  stages {
     // Stage 1: Muestra información básica sobre la ejecución.
     stage('Info') {
       steps {
@@ -17,7 +18,6 @@ pipeline {
         sh 'echo "Build: ${BUILD_NUMBER}"'
       }
     }
-
 
     stage('Test') {
       /*
