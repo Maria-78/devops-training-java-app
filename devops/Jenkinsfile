@@ -26,7 +26,10 @@ pipeline {
         }
       }
       steps {
-        sh 'make lint'
+        sh '''
+          apt-get update && apt-get install -y make
+          make lint
+        '''
       }
     }
 
@@ -37,7 +40,10 @@ pipeline {
         }
       }
       steps {
-        sh 'make test'
+        sh '''
+          apt-get update && apt-get install -y make
+          make test
+        '''
       }
     }
   }
