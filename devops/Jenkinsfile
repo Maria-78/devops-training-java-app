@@ -26,6 +26,18 @@ pipeline {
       }
     }
 
+    // Construye la imagen Docker de la aplicación.
+    stage('Build image') {
+        steps {
+            // El bloque 'script' permite usar código Groovy más complejo.
+            script {
+                echo "Building and tagging image: ${env.IMAGE_NAME}"
+                // Ejecuta 'docker build' para crear la imagen.
+                docker.build(env.IMAGE_NAME, "--build-arg VERSION=... -f devops/Dockerfile .")
+            }
+        }
+    }
+
     stage('Lint') {
       steps {
         runInDocker('maven:3.8.6-openjdk-11-slim') {
@@ -48,15 +60,5 @@ pipeline {
       }
     }
 
-    stage('Build image') {
-      steps {
-        script {
-          def appImage = docker.build(
-            "${JOB_NAME}:${env.BUILD_NUMBER}",
-            "--build-arg VERSION=${BUILD_NUMBER} -f devops/Dockerfile ."
-          )
-        }
-      }
-    }
   }
 }
