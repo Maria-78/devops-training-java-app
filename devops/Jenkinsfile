@@ -47,5 +47,16 @@ pipeline {
         }
       }
     }
+
+    stage('Build image') {
+      steps {
+        script {
+          def appImage = docker.build(
+            "${JOB_NAME}:${env.BUILD_NUMBER}",
+            "--build-arg VERSION=${BUILD_NUMBER} -f devops/Dockerfile ."
+          )
+        }
+      }
+    }
   }
 }
