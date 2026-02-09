@@ -31,9 +31,10 @@ pipeline {
         steps {
             // El bloque 'script' permite usar código Groovy más complejo.
             script {
-                echo "Building and tagging image: ${env.IMAGE_NAME}"
+                def imageName = "${JOB_NAME}:${BUILD_NUMBER}".toLowerCase()
+                echo "Building and tagging image: ${imageName}"
                 // Ejecuta 'docker build' para crear la imagen.
-                docker.build(env.IMAGE_NAME, "--build-arg VERSION=... -f devops/Dockerfile .")
+                docker.build(imageName, "--build-arg VERSION=${BUILD_NUMBER} -f devops/Dockerfile .")
             }
         }
     }
