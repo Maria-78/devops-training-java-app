@@ -6,6 +6,13 @@
   hasta construir un pipeline CI/CD completo.
 */
 
+// Función reutilizable para ejecutar comandos dentro de un contenedor Docker.
+def runInDocker(String image, Closure body) {
+  docker.image(image).inside {
+    body()
+  }
+}
+
 pipeline {
   // `agent any` = el pipeline se ejecuta en cualquier nodo/agente disponible.
   agent any
@@ -20,30 +27,24 @@ pipeline {
     }
 
     stage('Lint') {
-      agent {
-        docker {
-          image 'maven:3.8.6-openjdk-11-slim'
-        }
-      }
       steps {
-        sh '''
-          apt-get update && apt-get install -y make
-          make lint
-        '''
+        runInDocker('maven:3.8.6-openjdk-11-slim') {
+          sh '''
+            apt-get update && apt-get install -y make
+            make lint
+          '''
+        }
       }
     }
 
     stage('Test') {
-      agent {
-        docker {
-          image 'maven:3.8.6-openjdk-11-slim'
-        }
-      }
       steps {
-        sh '''
-          apt-get update && apt-get install -y make
-          make test
-        '''
+        runInDocker('maven:3.8.6-openjdk-11-slim') {
+          sh '''
+            apt-get update && apt-get install -y make
+            make test
+          '''
+        }
       }
     }
   }
